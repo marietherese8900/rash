@@ -392,187 +392,187 @@
     }
   </style>
 </head>
-<body>
-  <div class="page-content">
-    <h1>🌸 Happiest Birthday Rash !!</h1>
-
-    <div class="photo-gallery">
-      <div class="photo-container">
-        <div class="emoji-hat">🥳</div>
-        <img src="image3.jpeg" alt="Friend with Hat" class="photo" />
+    <body>
+      <div class="page-content">
+        <h1>🌸 Happiest Birthday Rash !!</h1>
+    
+        <div class="photo-gallery">
+          <div class="photo-container">
+            <div class="emoji-hat">🥳</div>
+            <img src="image3.jpeg" alt="Friend with Hat" class="photo" />
+          </div>
+          <div class="photo-container">
+            <img src="image1.jpeg" alt="Second Friend" class="photo" />
+          </div>
+        </div>
+    
+        <p>Spin the wheel and see what you get! 🎉</p>
+    
+        <div class="wheel-container">
+          <canvas id="wheel" width="300" height="300"></canvas>
+          <div class="arrow"></div>
+        </div>
+    
+        <div class="buttons-wrapper">
+          <button class="spin-button" id="spinBtn">🎡 Spin the Wheel</button>
+        </div>
       </div>
-      <div class="photo-container">
-        <img src="image1.jpeg" alt="Second Friend" class="photo" />
-      </div>
-    </div>
-
-    <p>Spin the wheel and see what you get! 🎉</p>
-
-    <div class="wheel-container">
-      <canvas id="wheel" width="300" height="300"></canvas>
-      <div class="arrow"></div>
-    </div>
-
-    <div class="buttons-wrapper">
-      <button class="spin-button" id="spinBtn">🎡 Spin the Wheel</button>
-    </div>
-  </div>
-
-  <!-- Confetti Canvas -->
-  <canvas id="confetti" style="position:fixed; top:0; left:0; pointer-events:none; z-index:3;"></canvas>
-
-  <!-- Floating flower emojis -->
-  <script>
-    for (let i = 0; i < 30; i++) {
-      const flower = document.createElement("div");
-      flower.classList.add("floating-flower");
-      flower.innerText = "🌸";
-      flower.style.left = Math.random() * 100 + "vw";
-      flower.style.animationDuration = 2 + Math.random() * 1 + "s";
-      document.body.appendChild(flower);
-    }
-  </script>
-
-  <!-- Wheel + Auto-download Logic -->
-  <script>
-    const canvas = document.getElementById("wheel");
-    const ctx = canvas.getContext("2d");
-    const spinBtn = document.getElementById("spinBtn");
-
-    const segments = [
-      "Almost", "Try Again", "So Close",
-      "Better Luck", "Oops", "You Won!!"
-    ];
-
-    const colors = [
-      "#e1bee7", "#ce93d8", "#d1c4e9",
-      "#f3e5f5", "#c5cae9", "#ba68c8"
-    ];
-
-    let angle = 0;
-    let spinning = false;
-
-    function drawWheel() {
-      const radius = canvas.width / 2;
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-
-      for (let i = 0; i < segments.length; i++) {
-        const startAngle = angle + (i * 2 * Math.PI) / segments.length;
-        const endAngle = angle + ((i + 1) * 2 * Math.PI) / segments.length;
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-        ctx.fillStyle = colors[i];
-        ctx.fill();
-        ctx.save();
-        ctx.translate(centerX, centerY);
-        ctx.rotate(startAngle + Math.PI / segments.length);
-        ctx.textAlign = "right";
-        ctx.fillStyle = "#4a148c";
-        ctx.font = "bold 14px Comic Sans MS";
-        ctx.fillText(segments[i], radius - 10, 10);
-        ctx.restore();
-      }
-    }
-
-    function spinWheel() {
-      if (spinning) return;
-      spinning = true;
-      spinBtn.disabled = true;
-
-      const segmentAngle = 360 / segments.length;
-      const stopAngle = 360 - (segmentAngle * 4); // Index 5 lands on "You Won!!"
-      const totalRotation = 360 * 5 + stopAngle;
-      const duration = 5000;
-      const start = performance.now();
-
-      function animate(time) {
-        const elapsed = time - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        angle = ((totalRotation * eased) * Math.PI) / 180;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawWheel();
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          setTimeout(() => {
-            document.querySelector("p").innerText = "🎉 You Won! 🎉";
-            launchConfetti();
-
-            // Auto-download the PDF
-            const link = document.createElement("a");
-            link.href = "voucher.pdf";
-            link.download = "voucher.pdf";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            spinning = false;
-            spinBtn.disabled = false;
-          }, 500);
+    
+      <!-- Confetti Canvas -->
+      <canvas id="confetti" style="position:fixed; top:0; left:0; pointer-events:none; z-index:3;"></canvas>
+    
+      <!-- Floating flower emojis -->
+      <script>
+        for (let i = 0; i < 30; i++) {
+          const flower = document.createElement("div");
+          flower.classList.add("floating-flower");
+          flower.innerText = "🌸";
+          flower.style.left = Math.random() * 100 + "vw";
+          flower.style.animationDuration = 2 + Math.random() * 1 + "s";
+          document.body.appendChild(flower);
         }
-      }
-
-      requestAnimationFrame(animate);
-    }
-
-    drawWheel();
-    spinBtn.addEventListener("click", spinWheel);
-  </script>
-
-  <!-- Confetti Logic -->
-  <script>
-    const confettiCanvas = document.getElementById("confetti");
-    const confettiCtx = confettiCanvas.getContext("2d");
-    let confettiParticles = [];
-
-    function resizeCanvas() {
-      confettiCanvas.width = window.innerWidth;
-      confettiCanvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-
-    function launchConfetti() {
-      for (let i = 0; i < 50; i++) {
-        confettiParticles.push({
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight - window.innerHeight,
-          r: Math.random() * 6 + 4,
-          d: Math.random() * 50 + 10,
-          color: `hsl(${Math.random() * 360}, 70%, 70%)`,
-          tilt: Math.random() * 10 - 5,
-          tiltAngle: 0,
-        });
-      }
-      animateConfetti();
-    }
-
-    function animateConfetti() {
-      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      for (let i = 0; i < confettiParticles.length; i++) {
-        let p = confettiParticles[i];
-        p.y += Math.cos(p.d) + 2;
-        p.x += Math.sin(p.d);
-        p.tiltAngle += 0.1;
-        p.tilt = Math.sin(p.tiltAngle) * 15;
-
-        confettiCtx.beginPath();
-        confettiCtx.lineWidth = p.r;
-        confettiCtx.strokeStyle = p.color;
-        confettiCtx.moveTo(p.x + p.tilt, p.y);
-        confettiCtx.lineTo(p.x, p.y + p.tilt + p.r);
-        confettiCtx.stroke();
-      }
-
-      confettiParticles = confettiParticles.filter(p => p.y < window.innerHeight);
-      if (confettiParticles.length > 0) {
-        requestAnimationFrame(animateConfetti);
-      }
-    }
-  </script>
-</body>
+      </script>
+    
+      <!-- Wheel + Auto-download Logic -->
+      <script>
+        const canvas = document.getElementById("wheel");
+        const ctx = canvas.getContext("2d");
+        const spinBtn = document.getElementById("spinBtn");
+    
+        const segments = [
+          "Almost", "Try Again", "So Close",
+          "Better Luck", "Oops", "You Won!!"
+        ];
+    
+        const colors = [
+          "#e1bee7", "#ce93d8", "#d1c4e9",
+          "#f3e5f5", "#c5cae9", "#ba68c8"
+        ];
+    
+        let angle = 0;
+        let spinning = false;
+    
+        function drawWheel() {
+          const radius = canvas.width / 2;
+          const centerX = canvas.width / 2;
+          const centerY = canvas.height / 2;
+    
+          for (let i = 0; i < segments.length; i++) {
+            const startAngle = angle + (i * 2 * Math.PI) / segments.length;
+            const endAngle = angle + ((i + 1) * 2 * Math.PI) / segments.length;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+            ctx.fillStyle = colors[i];
+            ctx.fill();
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.rotate(startAngle + Math.PI / segments.length);
+            ctx.textAlign = "right";
+            ctx.fillStyle = "#4a148c";
+            ctx.font = "bold 14px Comic Sans MS";
+            ctx.fillText(segments[i], radius - 10, 10);
+            ctx.restore();
+          }
+        }
+    
+        function spinWheel() {
+          if (spinning) return;
+          spinning = true;
+          spinBtn.disabled = true;
+    
+          const segmentAngle = 360 / segments.length;
+          const stopAngle = 360 - (segmentAngle * 4); // Index 5 lands on "You Won!!"
+          const totalRotation = 360 * 5 + stopAngle;
+          const duration = 5000;
+          const start = performance.now();
+    
+          function animate(time) {
+            const elapsed = time - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            angle = ((totalRotation * eased) * Math.PI) / 180;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawWheel();
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              setTimeout(() => {
+                document.querySelector("p").innerText = "🎉 You Won! 🎉";
+                launchConfetti();
+    
+                // Auto-download the PDF
+                const link = document.createElement("a");
+                link.href = "voucher.pdf";
+                link.download = "voucher.pdf";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+    
+                spinning = false;
+                spinBtn.disabled = false;
+              }, 500);
+            }
+          }
+    
+          requestAnimationFrame(animate);
+        }
+    
+        drawWheel();
+        spinBtn.addEventListener("click", spinWheel);
+      </script>
+    
+      <!-- Confetti Logic -->
+      <script>
+        const confettiCanvas = document.getElementById("confetti");
+        const confettiCtx = confettiCanvas.getContext("2d");
+        let confettiParticles = [];
+    
+        function resizeCanvas() {
+          confettiCanvas.width = window.innerWidth;
+          confettiCanvas.height = window.innerHeight;
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+    
+        function launchConfetti() {
+          for (let i = 0; i < 50; i++) {
+            confettiParticles.push({
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight - window.innerHeight,
+              r: Math.random() * 6 + 4,
+              d: Math.random() * 50 + 10,
+              color: `hsl(${Math.random() * 360}, 70%, 70%)`,
+              tilt: Math.random() * 10 - 5,
+              tiltAngle: 0,
+            });
+          }
+          animateConfetti();
+        }
+    
+        function animateConfetti() {
+          confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+          for (let i = 0; i < confettiParticles.length; i++) {
+            let p = confettiParticles[i];
+            p.y += Math.cos(p.d) + 2;
+            p.x += Math.sin(p.d);
+            p.tiltAngle += 0.1;
+            p.tilt = Math.sin(p.tiltAngle) * 15;
+    
+            confettiCtx.beginPath();
+            confettiCtx.lineWidth = p.r;
+            confettiCtx.strokeStyle = p.color;
+            confettiCtx.moveTo(p.x + p.tilt, p.y);
+            confettiCtx.lineTo(p.x, p.y + p.tilt + p.r);
+            confettiCtx.stroke();
+          }
+    
+          confettiParticles = confettiParticles.filter(p => p.y < window.innerHeight);
+          if (confettiParticles.length > 0) {
+            requestAnimationFrame(animateConfetti);
+          }
+        }
+      </script>
+    </body>
 </html>
 
