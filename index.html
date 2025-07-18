@@ -66,40 +66,7 @@
       z-index: 1;
     }
 
-    .wheel-container {
-      position: relative;
-      width: 300px;
-      height: 300px;
-      margin: 30px auto 0;
-    }
-
-    .arrow {
-      width: 0;
-      height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-bottom: 20px solid #6a1b9a;
-      position: absolute;
-      bottom: -20px;
-      left: calc(50% - 15px);
-      z-index: 2;
-    }
-
-    canvas {
-      display: block;
-      margin: 0 auto;
-    }
-
-    .buttons-wrapper {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 25px;
-      flex-wrap: nowrap;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+  
 
     .spin-button {
       font-size: 1.2em;
@@ -171,27 +138,6 @@
         height: 160px;
       }
 
-      .wheel-container {
-        width: 150px;
-        height: 150px;
-        margin-top: 15px;
-      }
-
-      .buttons-wrapper {
-        flex-direction: column;
-        gap: 15px;
-        max-width: 90%;
-        margin-top: 20px;
-      }
-
-      .spin-button,
-      .gift-link {
-        min-width: unset;
-        flex: unset;
-        width: 100%;
-        font-size: 1.1em;
-      }
-
       .gift-link {
         display: inline-block !important;
       }
@@ -214,13 +160,8 @@
 
     <p>Spin the wheel and see what you get! 🎉</p>
 
-    <div class="wheel-container">
-      <canvas id="wheel" width="400" height="400"></canvas>
-      <div class="arrow"></div>
-    </div>
 
     <div class="buttons-wrapper">
-      <button class="spin-button" id="spinBtn">🎡 Spin the Wheel</button>
       <a class="gift-link" id="giftBtn" href="voucher.pdf" download>🎁 Click here to get your gift</a>
     </div>
   </div>
@@ -241,87 +182,7 @@
   </script>
 
   <!-- Wheel + Confetti Logic -->
-  <script>
-    const canvas = document.getElementById("wheel");
-    const ctx = canvas.getContext("2d");
-    const spinBtn = document.getElementById("spinBtn");
-    const giftBtn = document.getElementById("giftBtn");
 
-    const segments = [
-      "Almost", "Try Again", "So Close",
-      "Better Luck", "Oops", "You Won!!"
-    ];
-
-    const colors = [
-      "#e1bee7", "#ce93d8", "#d1c4e9",
-      "#f3e5f5", "#c5cae9", "#ba68c8"
-    ];
-
-    let angle = 0;
-    let spinning = false;
-
-    function drawWheel() {
-      const radius = canvas.width / 2;
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-
-      for (let i = 0; i < segments.length; i++) {
-        const startAngle = angle + (i * 2 * Math.PI) / segments.length;
-        const endAngle = angle + ((i + 1) * 2 * Math.PI) / segments.length;
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-        ctx.fillStyle = colors[i];
-        ctx.fill();
-        ctx.save();
-        ctx.translate(centerX, centerY);
-        ctx.rotate(startAngle + Math.PI / segments.length);
-        ctx.textAlign = "right";
-        ctx.fillStyle = "#4a148c";
-        ctx.font = "bold 14px Comic Sans MS";
-        ctx.fillText(segments[i], radius - 10, 10);
-        ctx.restore();
-      }
-    }
-
-    function spinWheel() {
-      if (spinning) return;
-      spinning = true;
-      spinBtn.disabled = true;
-      giftBtn.style.display = "none"; // hide gift link on spin start
-
-      const segmentAngle = 360 / segments.length;
-      const stopAngle = 360 - (segmentAngle * 4);
-      const totalRotation = 360 * 5 + stopAngle;
-      const duration = 5000;
-      const start = performance.now();
-
-      function animate(time) {
-        const elapsed = time - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        angle = ((totalRotation * eased) * Math.PI) / 180;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawWheel();
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          setTimeout(() => {
-            document.querySelector("p").innerText = "🎉 You Won! 🎉";
-            giftBtn.style.display = "inline-block";
-            launchConfetti();
-            spinning = false;
-            spinBtn.disabled = false;
-          }, 500);
-        }
-      }
-
-      requestAnimationFrame(animate);
-    }
-
-    drawWheel();
-    spinBtn.addEventListener("click", spinWheel);
-  </script>
 
   <!-- Confetti script -->
   <script>
