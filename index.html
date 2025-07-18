@@ -133,7 +133,7 @@
     }
 
     .floating-flower {
-      position: fixed; /* changed from absolute */
+      position: fixed; 
       font-size: 30px;
       animation: floatUp 10s linear infinite;
       opacity: 0.9;
@@ -155,14 +155,6 @@
       }
     }
 
-    #yt-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 0;
-      height: 0;
-      z-index: -10;
-    }
 
     /* Responsive adjustments */
     @media (max-width: 480px) {
@@ -223,7 +215,7 @@
     <p>Spin the wheel and see what you get! 🎉</p>
 
     <div class="wheel-container">
-      <canvas id="wheel" width="300" height="300"></canvas>
+      <canvas id="wheel" width="200" height="200"></canvas>
       <div class="arrow"></div>
     </div>
 
