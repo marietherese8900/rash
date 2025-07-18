@@ -11,11 +11,16 @@
       background-color: #FFFDD0;
       font-family: 'Comic Sans MS', cursive, sans-serif;
       text-align: center;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-bottom: 80px;
+      overflow-y: auto;
+    }
+
+    .page-content {
+      min-height: 120vh; /* force scrolling */
+      position: relative;
+      z-index: 1;
+      padding: 20px 10px 40px;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     h1 {
@@ -30,11 +35,42 @@
       margin: 0 20px 30px;
     }
 
+    .photo-gallery {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .photo-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .photo {
+      width: 150px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px;
+      border: 3px solid #ba68c8;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .emoji-hat {
+      position: absolute;
+      font-size: 2.5rem;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-15deg);
+      z-index: 1;
+    }
+
     .wheel-container {
       position: relative;
-      width: 100%;
-      max-width: 320px;
-      margin-bottom: 30px;
+      width: 300px;
+      height: 300px;
+      margin: 30px auto 0;
     }
 
     .arrow {
@@ -50,13 +86,22 @@
     }
 
     canvas {
-      width: 100% !important;
-      height: auto !important;
       display: block;
+      margin: 0 auto;
+    }
+
+    .buttons-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 25px;
+      flex-wrap: nowrap;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .spin-button {
-      margin-top: 20px;
       font-size: 1.2em;
       padding: 12px 24px;
       background-color: #ba68c8;
@@ -64,6 +109,8 @@
       border: none;
       border-radius: 10px;
       cursor: pointer;
+      flex: 1;
+      min-width: 140px;
     }
 
     .spin-button:disabled {
@@ -73,21 +120,25 @@
 
     .gift-link {
       display: none;
-      margin-top: 30px;
       background-color: #ab47bc;
       color: white;
-      padding: 12px 25px;
+      padding: 12px 15px;
       font-size: 1.2em;
       border-radius: 10px;
       text-decoration: none;
+      flex: 1;
+      min-width: 140px;
+      align-self: center;
+      text-align: center;
     }
 
     .floating-flower {
-      position: absolute;
+      position: fixed; /* changed from absolute */
       font-size: 30px;
       animation: floatUp 10s linear infinite;
       opacity: 0.9;
       z-index: 0;
+      pointer-events: none;
     }
 
     @keyframes floatUp {
@@ -113,35 +164,77 @@
       z-index: -10;
     }
 
-
+    /* Responsive adjustments */
     @media (max-width: 480px) {
-      .spin-button,
-      .gift-link {
-        width: 90%;
+      h1 {
+        font-size: 2em;
+        margin: 30px 10px 10px;
+        max-width: 220px;
+      }
+
+      canvas {
+        width: 100% !important;
+        height: auto !important;
+      }
+
+      .photo {
+        width: 120px;
+        height: 160px;
       }
 
       .wheel-container {
-        margin-top: 5px;
-         max-width: 220px;
+        width: 250px;
+        height: 250px;
+        margin-top: 20px;
       }
-      canvas {
-      width: 100% !important;
-      height: auto !important;
-    }
+
+      .buttons-wrapper {
+        flex-direction: column;
+        gap: 15px;
+        max-width: 90%;
+        margin-top: 20px;
+      }
+
+      .spin-button,
+      .gift-link {
+        min-width: unset;
+        flex: unset;
+        width: 100%;
+        font-size: 1.1em;
+      }
+
+      .gift-link {
+        display: inline-block !important; /* show gift button on mobile when triggered */
+      }
     }
   </style>
 </head>
 <body>
-  <h1>🌸 Happy Birthday Rash!</h1>
-  <p>Spin the wheel and see what you get! 🎉</p>
+  <div class="page-content">
+    <h1>🌸 Happiest Birthday Rash !!</h1>
 
-  <div class="wheel-container">
-    <div class="arrow"></div>
-    <canvas id="wheel" width="300" height="300"></canvas>
+    <div class="photo-gallery">
+      <div class="photo-container">
+        <div class="emoji-hat">🥳</div>
+        <img src="image3.jpeg" alt="Friend with Hat" class="photo" />
+      </div>
+      <div class="photo-container">
+        <img src="image1.jpeg" alt="Second Friend" class="photo" />
+      </div>
+    </div>
+
+    <p>Spin the wheel and see what you get! 🎉</p>
+
+    <div class="wheel-container">
+      <canvas id="wheel" width="300" height="300"></canvas>
+      <div class="arrow"></div>
+    </div>
+
+    <div class="buttons-wrapper">
+      <button class="spin-button" id="spinBtn">🎡 Spin the Wheel</button>
+      <a class="gift-link" id="giftBtn" href="voucher.pdf" download>🎁 Click here to get your gift</a>
+    </div>
   </div>
-
-  <button class="spin-button" id="spinBtn">🎡 Spin the Wheel</button>
-  <a class="gift-link" id="giftBtn" href="giftcard.pdf" download>🎁 Click here to get your gift</a>
 
   <!-- Confetti Canvas -->
   <canvas id="confetti" style="position:fixed; top:0; left:0; pointer-events:none; z-index:3;"></canvas>
@@ -153,7 +246,7 @@
       flower.classList.add("floating-flower");
       flower.innerText = "🌸";
       flower.style.left = Math.random() * 100 + "vw";
-      flower.style.animationDuration = 2 +  Math.random() * 1 + "s";
+      flower.style.animationDuration = 2 + Math.random() * 1 + "s";
       document.body.appendChild(flower);
     }
   </script>
@@ -206,11 +299,11 @@
       if (spinning) return;
       spinning = true;
       spinBtn.disabled = true;
+      giftBtn.style.display = "none"; // hide gift link on spin start
 
       const segmentAngle = 360 / segments.length;
       const stopAngle = 360 - (segmentAngle * 4);
       const totalRotation = 360 * 5 + stopAngle;
-      let currentRotation = 0;
       const duration = 5000;
       const start = performance.now();
 
@@ -228,6 +321,8 @@
             document.querySelector("p").innerText = "🎉 You Won! 🎉";
             giftBtn.style.display = "inline-block";
             launchConfetti();
+            spinning = false;
+            spinBtn.disabled = false;
           }, 500);
         }
       }
